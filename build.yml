@@ -1,0 +1,42 @@
+name: Build HTML Project
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Display Project Files
+        run: ls -la
+
+      - name: Verify HTML File Exists
+        run: |
+          if [ -f index.htm ]; then
+            echo "HTML file found."
+          else
+            echo "index.htm not found."
+            exit 1
+          fi
+
+      - name: Create Build Folder
+        run: |
+          mkdir build
+          cp index.htm build/
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-build
+          path: build/
